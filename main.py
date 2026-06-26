@@ -20,47 +20,43 @@ def get_keno_numbers():
                 return sorted(data["data"]["results"][:20])
     except Exception as e:
         print(f"Error fetching data: {e}")
-    # ኤፒአዩ ካልሠራ በራሱ ዝም ብሎ 20 ቁጥሮችን ይመርጣል
     return sorted(random.sample(range(1, 81), 20))
 
 def update_web_page(hot_numbers):
-    # መጀመሪያ template.html መኖሩን ያረጋግጣል፤ ከሌለ ራሱ ይፈጥረዋል
-    if not os.path.exists("template.html"):
-        with open("template.html", "w", encoding="utf-8") as f:
-            f.write("""<!DOCTYPE html>
+    # ትክክለኛና ንጹህ የኤችቲኤምኤል (HTML) ዲዛይን
+    html_content = f"""<!DOCTYPE html>
 <html lang="am">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Winner's Mindset - Keno Predictor</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #121212; color: #ffffff; text-align: center; padding: 20px; }
-        .container { max-width: 500px; margin: auto; background: #1e1e1e; padding: 30px; border-radius: 15px; border: 2px solid #00ffcc; }
-        h1 { color: #00ffcc; }
-        .numbers-box { display: flex; justify-content: center; gap: 10px; margin: 25px 0; flex-wrap: wrap; }
-        .number { background: #00ffcc; color: #121212; font-weight: bold; font-size: 20px; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0c0f12; color: #ffffff; text-align: center; padding: 20px; margin: 0; }}
+        .container {{ max-width: 450px; margin: 40px auto; background: #161b22; padding: 30px; border-radius: 20px; box-shadow: 0 8px 24px rgba(0,255,204,0.1); border: 2px solid #00ffcc; }}
+        h1 {{ color: #00ffcc; margin-bottom: 5px; font-size: 28px; }}
+        .subtitle {{ color: #8b949e; font-size: 14px; margin-bottom: 30px; }}
+        .numbers-box {{ display: flex; justify-content: center; gap: 12px; margin: 25px 0; flex-wrap: wrap; }}
+        .number {{ background: linear-gradient(135deg, #00ffcc, #00b3ff); color: #0c0f12; font-weight: bold; font-size: 22px; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,255,204,0.3); }}
+        .footer-time {{ margin-top: 30px; border-top: 1px solid #21262d; padding-top: 15px; color: #8b949e; font-size: 13px; }}
+        .time-val {{ color: #ffeb3b; font-weight: bold; }}
     </style>
 </head>
 <body>
     <div class="container">
         <h1>የአሸናፊ ስነ ልቦና</h1>
-        <p>የኬኖ ቀጣይ ዙር ሊወጡ የሚችሉ (Hot) ቁጥሮች ትንበያ</p>
-        <div class="numbers-box"></div>
-        <p>የሰርቨር ማመሳሰያ ሰዓት፦ <br><span></span></p>
+        <div class="subtitle">የኬኖ ቀጣይ ዙር ሊወጡ የሚችሉ (Hot) ቁጥሮች ትንበያ</div>
+        <div class="numbers-box">
+            {"".join([f'<div class="number">{num}</div>' for num in hot_numbers])}
+        </div>
+        <div class="footer-time">
+            የሰርቨር ማመሳሰያ ሰዓት፦ <br><span class="time-val">{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}</span>
+        </div>
     </div>
 </body>
-</html>""")
+</html>"""
 
-    with open("template.html", "r", encoding="utf-8") as f:
-        html = f.read()
-    
-    numbers_html = "".join([f'<div class="number">{num}</div>' for num in hot_numbers])
-    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    
-    html = html.replace("", numbers_html)
-    html = html.replace("", current_time)
-    
     with open("index.html", "w", encoding="utf-8") as f:
-        f.write(html)
+        f.write(html_content)
 
 def save_and_predict():
     live_numbers = get_keno_numbers()
