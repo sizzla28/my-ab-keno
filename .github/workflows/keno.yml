@@ -2,14 +2,30 @@ name: Keno Live Web Bot
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write # GitHub Actions ፋይል የመጻፍና ሴቭ የማድረግ ፈቃድ ይሰጠዋል
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    
     - uses: actions/setup-python@v5
       with:
         python-version: '3.10'
-    - run: |
-        pip install -r requirements.txt
-        python main.py
+        
+    - name: Install dependencies
+      run: |
+        pip install requests pandas
+        
+    - name: Run predicting bot
+      run: python main.py
+      
+    - name: Commit and Push changes
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add index.html keno_history.csv || exit 0
+        git commit -m "Web page updated with latest keno data" || exit 0
+        git push
