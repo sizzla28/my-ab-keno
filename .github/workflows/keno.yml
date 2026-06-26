@@ -1,33 +1,15 @@
 name: Keno Live Web Bot
-
 on:
-  schedule:
-    - cron: '0 * * * *' # በየሰዓቱ በራሱ ይነሳል
-  workflow_dispatch: # በእጃችን ማስነሳት እንድንችል
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
       with:
         python-version: '3.10'
-
-    - name: Install dependencies
-      run: |
+    - run: |
         pip install -r requirements.txt
-
-    - name: Run prediction bot
-      run: python main.py
-
-    - name: Commit and Push changes
-      run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git add index.html keno_history.csv || exit 0
-        git commit -m "Web page updated with latest keno data" || exit 0
-        git push
+        python main.py
