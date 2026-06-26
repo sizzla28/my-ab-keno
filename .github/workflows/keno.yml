@@ -1,9 +1,11 @@
 name: Keno Live Web Bot
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '*/5 * * * *' # ይህ ማዘዣ በየ 5 ደቂቃው ያለማቋረጥ ቦቱን በራሱ ያስነሳዋል
 
 permissions:
-  contents: write # GitHub Actions ፋይል የመጻፍና ሴቭ የማድረግ ፈቃድ ይሰጠዋል
+  contents: write
 
 jobs:
   build:
